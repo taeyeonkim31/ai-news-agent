@@ -42,7 +42,9 @@ Your angle: {angle}
 
 The other three lenses ({others}) will cover their own angles independently. Assume they exist — do not repeat what they would cover. Stay in your lane and go deep on yours.
 
-Analyze each of the following articles strictly from your lens. Write 2-3 sentences per article. Be direct and specific — no filler, no hedging.
+Analyze each of the following articles strictly from your lens. For each article:
+- Write one insight line that captures what this news actually reveals from your angle. Frame it as an observation, not a conclusion — the reader decides what to do with it. Start with "The real point here is..." or "What this actually reveals is..." or similar.
+- Then write exactly 3 bullets: detail, evidence, context. Each bullet max 2 sentences. Be specific — no filler, no hedging.
 
 Articles:
 {articles_text}
@@ -53,7 +55,8 @@ Return a JSON object with this exact structure:
   "articles": [
     {{
       "index": <original index number>,
-      "analysis": "<your 2-3 sentence analysis from the {name} perspective>"
+      "insight": "<one insight line from the {name} perspective>",
+      "bullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"]
     }}
   ]
 }}

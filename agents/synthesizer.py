@@ -8,15 +8,21 @@ from news_fetcher import Article
 
 
 @dataclass
+class LensAnalysis:
+    insight: str
+    bullets: list
+
+
+@dataclass
 class ArticleBriefing:
     title: str
     url: str
     source: str
     curator_reason: str
-    market: str
-    tech: str
-    society: str
-    user: str
+    market: LensAnalysis
+    tech: LensAnalysis
+    society: LensAnalysis
+    user: LensAnalysis
 
 
 @dataclass
@@ -32,13 +38,18 @@ def synthesize(
 ) -> DailyBriefing:
     """Assembles per-article briefings from lens outputs. No Claude call — pure assembly."""
 
-    # build lookup: lens_key → {article_index → analysis}
-    lens_lookup: dict[str, dict[int, str]] = {}
+    # build lookup: lens_key → {article_index → LensAnalysis}
+    lens_lookup: dict[str, dict[int, LensAnalysis]] = {}
     for lens_key, result in lens_results.items():
         lens_lookup[lens_key] = {
-            item["index"]: item["analysis"]
+            item["index"]: LensAnalysis(
+                insight=item["insight"],
+                bullets=item["bullets"],
+            )
             for item in result["articles"]
         }
+
+    empty_lens = LensAnalysis(insight="", bullets=[])
 
     articles = []
     for i, (article, curator_reason) in enumerate(selected):
@@ -47,10 +58,10 @@ def synthesize(
             url=article.url,
             source=article.source,
             curator_reason=curator_reason,
-            market=lens_lookup.get("market", {}).get(i, ""),
-            tech=lens_lookup.get("tech", {}).get(i, ""),
-            society=lens_lookup.get("society", {}).get(i, ""),
-            user=lens_lookup.get("user", {}).get(i, ""),
+            market=lens_lookup.get("market", {}).get(i, empty_lens),
+            tech=lens_lookup.get("tech", {}).get(i, empty_lens),
+            society=lens_lookup.get("society", {}).get(i, empty_lens),
+            user=lens_lookup.get("user", {}).get(i, empty_lens),
         ))
 
     return DailyBriefing(
@@ -77,8 +88,20 @@ def load_latest_briefing(output_dir: str = "output") -> Optional[DailyBriefing]:
     path = os.path.join(output_dir, files[-1])
     with open(path) as f:
         data = json.load(f)
+    articles = []
+    for a in data["articles"]:
+        articles.append(ArticleBriefing(
+            title=a["title"],
+            url=a["url"],
+            source=a["source"],
+            curator_reason=a["curator_reason"],
+            market=LensAnalysis(**a["market"]),
+            tech=LensAnalysis(**a["tech"]),
+            society=LensAnalysis(**a["society"]),
+            user=LensAnalysis(**a["user"]),
+        ))
     return DailyBriefing(
         date=data["date"],
         article_count=data["article_count"],
-        articles=[ArticleBriefing(**a) for a in data["articles"]],
+        articles=articles,
     )

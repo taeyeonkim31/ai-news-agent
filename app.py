@@ -27,6 +27,12 @@ LENS_LABELS = {
     "user":    "👤 User",
 }
 
+def render_lens(label, lens):
+    st.markdown(f"**{label}**")
+    st.markdown(f"*{lens.insight}*")
+    for bullet in lens.bullets:
+        st.markdown(f"- {bullet}")
+
 for article in briefing.articles:
     st.markdown(f"### [{article.title}]({article.url})")
     st.caption(f"Source: {article.source}")
@@ -34,17 +40,13 @@ for article in briefing.articles:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown(f"**{LENS_LABELS['market']}**")
-        st.markdown(article.market)
+        render_lens(LENS_LABELS["market"], article.market)
         st.markdown("")
-        st.markdown(f"**{LENS_LABELS['tech']}**")
-        st.markdown(article.tech)
+        render_lens(LENS_LABELS["tech"], article.tech)
 
     with col2:
-        st.markdown(f"**{LENS_LABELS['society']}**")
-        st.markdown(article.society)
+        render_lens(LENS_LABELS["society"], article.society)
         st.markdown("")
-        st.markdown(f"**{LENS_LABELS['user']}**")
-        st.markdown(article.user)
+        render_lens(LENS_LABELS["user"], article.user)
 
     st.divider()

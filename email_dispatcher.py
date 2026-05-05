@@ -8,6 +8,17 @@ load_dotenv()
 
 def _build_html(briefing: DailyBriefing) -> str:
     articles_html = ""
+    def lens_html(label: str, color: str, lens) -> str:
+        bullets_html = "".join(
+            f'<li style="margin-bottom:6px; font-size:14px; line-height:1.6; color:#333;">{b}</li>'
+            for b in lens.bullets
+        )
+        return f"""
+          <p style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:{color};">{label}</p>
+          <p style="margin:0 0 8px 0; font-size:14px; line-height:1.6; color:#555; font-style:italic;">{lens.insight}</p>
+          <ul style="margin:0 0 16px 0; padding-left:20px;">{bullets_html}</ul>
+        """
+
     for article in briefing.articles:
         articles_html += f"""
         <div style="margin-bottom:40px; border-left:3px solid #e0e0e0; padding-left:20px;">
@@ -15,18 +26,10 @@ def _build_html(briefing: DailyBriefing) -> str:
             <a href="{article.url}" style="color:#1a1a1a; text-decoration:none;">{article.title}</a>
           </h2>
           <p style="color:#888; font-size:13px; margin:0 0 16px 0;">Source: {article.source}</p>
-
-          <p style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:#2563eb;">📈 Market</p>
-          <p style="margin:0 0 16px 0; font-size:14px; line-height:1.6; color:#333;">{article.market}</p>
-
-          <p style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:#16a34a;">🔬 Tech</p>
-          <p style="margin:0 0 16px 0; font-size:14px; line-height:1.6; color:#333;">{article.tech}</p>
-
-          <p style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:#9333ea;">🏛 Society</p>
-          <p style="margin:0 0 16px 0; font-size:14px; line-height:1.6; color:#333;">{article.society}</p>
-
-          <p style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:#ea580c;">👤 User</p>
-          <p style="margin:0 0 0 0; font-size:14px; line-height:1.6; color:#333;">{article.user}</p>
+          {lens_html("📈 Market", "#2563eb", article.market)}
+          {lens_html("🔬 Tech", "#16a34a", article.tech)}
+          {lens_html("🏛 Society", "#9333ea", article.society)}
+          {lens_html("👤 User", "#ea580c", article.user)}
         </div>
         """
 
