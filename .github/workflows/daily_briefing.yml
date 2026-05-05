@@ -33,7 +33,12 @@ jobs:
           git pull --rebase origin main
           git add output/
           git diff --staged --quiet || git commit -m "briefing: $(date -u +%Y-%m-%d)"
-          git push
+          for i in 1 2 3; do
+            git push && break
+            echo "Push attempt $i failed, retrying..."
+            git pull --rebase origin main
+          done
+          git push || { echo "Push failed after 3 attempts"; exit 1; }
 
       - name: Send email
         env:
