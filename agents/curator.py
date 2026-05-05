@@ -7,11 +7,11 @@ import anthropic
 from news_fetcher import Article
 
 
-CURATOR_PROMPT = """You are a news curator for an AI briefing tool. Your job is to select 5-7 articles from today's AI news.
+CURATOR_PROMPT = """You are a news curator for an AI briefing tool. Your job is to select exactly 4 articles from today's AI news.
 
 Selection criteria:
-1. REPRODUCIBILITY: Prefer articles covered by multiple outlets simultaneously — this signals genuine significance, not just one outlet's agenda.
-2. DIVERSITY: Across your final selection, ensure variety in subject matter (models, infrastructure, policy, products, research, industry moves). Do NOT enforce a quota — let today's news landscape guide the balance naturally.
+1. REPRODUCIBILITY: Apply a high bar — prioritize articles covered by multiple outlets simultaneously. With only 4 slots, each article must carry a strong signal of genuine significance, not just one outlet's agenda.
+2. DIVERSITY: Ensure variety in subject matter (models, infrastructure, policy, products, research, industry moves). At most 2 of the 4 articles may share the same topic cluster. All 4 covering the same topic is not allowed — that would make this a deep-dive, not a briefing.
 
 You must NOT filter out press releases or promotional content. The tool's identity is "you decide what matters" — curation is about signal strength and variety, not editorial judgment on spin.
 
@@ -24,12 +24,12 @@ Return a JSON object with this exact structure:
   "selected": [
     {{
       "index": <original index number>,
-      "reason": "<one sentence: why this article clears the bar — cite reproducibility signal or diversity contribution>"
+      "reason": "<one sentence: why this article clears the high reproducibility bar or contributes essential diversity>"
     }}
   ]
 }}
 
-Select 5-7 articles. Return only the JSON object, no other text."""
+Select exactly 4 articles. Return only the JSON object, no other text."""
 
 
 def _format_articles(articles: list[Article]) -> str:
