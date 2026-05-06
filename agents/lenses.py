@@ -46,6 +46,13 @@ Analyze each of the following articles strictly from your lens. For each article
 - Write one insight line that captures what this news actually reveals from your angle. Frame it as an observation, not a conclusion — the reader decides what to do with it. Start with "The real point here is..." or "What this actually reveals is..." or similar.
 - Then write exactly 3 bullets: detail, evidence, context. Each bullet max 2 sentences. Be specific — no filler, no hedging.
 
+Sentence structure rules (apply to both insight and bullets):
+- One idea per sentence
+- Maximum ~20 words per sentence
+- Break long sentences into two short ones whenever possible
+- Avoid more than one subordinate clause per sentence
+- Keep the original analytical depth and tone — only restructure how it is expressed
+
 Articles:
 {articles_text}
 
